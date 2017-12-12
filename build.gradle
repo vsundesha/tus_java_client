@@ -1,0 +1,64 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group 'io.tus.java.client'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+            
+    compile 'org.jetbrains:annotations:13.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mock-server:mockserver-netty:3.9.17'
+
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task createPom << {
+    pom {
+        project {
+            groupId 'io.tus.java.client'
+            artifactId 'tus-java-client'
+            name 'tus-java-client'
+            version project.getProperties().get('pomVersion')
+            packaging 'pom'
+            description 'Java client for tus, the resumable file uploading protocol.'
+            url 'http://tus.io'
+
+            scm {
+                url 'https://github.com/tus/tus-java-client'
+                connection 'https://github.com/tus/tus-java-client'
+                developerConnection 'https://github.com/tus/tus-java-client'
+            }
+
+            developers {
+                developer {
+                    id 'acconut'
+                    name 'Marius Kleidl'
+                    email 'maerious@gmail.com'
+                }
+            }
+
+            inceptionYear '2015'
+            licenses {
+                license {
+                    name 'The MIT License (MIT)'
+                    url 'http://opensource.org/licenses/MIT'
+                }
+            }
+        }
+    }.writeTo("build/libs/pom.xml")
+}
